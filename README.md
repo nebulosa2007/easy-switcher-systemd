@@ -1,6 +1,6 @@
 # Easy Switcher
 Easy Switcher is a keyboard layout switcher and input corrector for Linux.  
-It runs as a daemon on your system, is independent from your desktop environment and windowing system, works with the keyboard directly via kernel input, so it is reliable and smooth.   
+It runs as a daemon in your system, is independent from your desktop environment and windowing system, works with the keyboard directly via kernel input, so it is reliable and smooth.   
 
 ## How does it work?
 Easy Switcher writes your keystrokes to internal buffer, and when you press a special key (Pause/Break by default), it erases what you have written, changes the layout, and writes the correct input back.
