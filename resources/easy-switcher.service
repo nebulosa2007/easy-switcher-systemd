@@ -1,0 +1,13 @@
+[Unit]
+Description=Easy Switcher - keyboard layout switcher
+StartLimitIntervalSec=10
+StartLimitBurst=3
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/easy-switcher -r
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=default.target 
