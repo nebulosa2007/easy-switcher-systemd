@@ -49,7 +49,7 @@ type
 const
   EASY_SWITCHER_VERSION = '0.3';
 
-  SYSTEMD_UNIT_FILE = '/lib/systemd/system/easy-switcher.service';
+  SYSTEMD_UNIT_FILE = '/usr/lib/systemd/user/easy-switcher.service';
   CONFIG_FILE = '/etc/easy-switcher/default.conf';
   INPUT_DEVICES_DIR = '/dev/input/';
   UINPUT_FILE = '/dev/uinput';
@@ -170,16 +170,13 @@ var
       UnitFile := TIniFile.Create(SYSTEMD_UNIT_FILE, []);
       UnitFile.WriteString('Unit', 'Description',
         'Easy Switcher - keyboard layout switcher');
-      UnitFile.WriteString('Unit', 'Requires', 'local-fs.target');
-      UnitFile.WriteString('Unit', 'After', 'local-fs.target');
       UnitFile.WriteString('Unit', 'StartLimitIntervalSec', '10');
       UnitFile.WriteString('Unit', 'StartLimitBurst', '3');
       UnitFile.WriteString('Service', 'Type', 'simple');
       UnitFile.WriteString('Service', 'ExecStart', ParamStr(0) + ' -r');
-      UnitFile.WriteString('Service', '#User', 'easy-switcher');
       UnitFile.WriteString('Service', 'Restart', 'on-failure');
       UnitFile.WriteString('Service', 'RestartSec', '3');
-      UnitFile.WriteString('Install', 'WantedBy', 'sysinit.target ');
+      UnitFile.WriteString('Install', 'WantedBy', 'default.target ');
       Log(etInfo, Format('Easy Switcher daemon successfully installed, version: %s',
         [EASY_SWITCHER_VERSION]), False);
       if Assigned(UnitFile) then
