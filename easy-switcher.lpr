@@ -50,7 +50,7 @@ const
   EASY_SWITCHER_VERSION = '0.3';
 
   SYSTEMD_UNIT_FILE = '/lib/systemd/system/easy-switcher.service';
-  CONFIG_FILE = '/etc/easy-switcher/default.conf';
+  CONFIG_FILE = 'default.conf';
   INPUT_DEVICES_DIR = '/dev/input/';
   UINPUT_FILE = '/dev/uinput';
 
@@ -258,18 +258,20 @@ var
     KeyboardFD: longint = -1;
     ioRes: int64 = -1;
     KeyIE: input_event;
+    ConfigFilePath: string;
   begin
     DaemonMode := False;
     KeyboardList := Default(TKeyboardList);
     SRec := Default(TSearchRec);
     KeyIE := Default(input_event);
+    ConfigFilePath := GetAppConfigDir(False);
 
     Log(etInfo, 'Easy Switcher keyboard configuration started.', False);
     Log(etInfo, 'Trying to read existing config file...', True);
-    if ForceDirectories(ExtractFileDir(CONFIG_FILE)) then
+    if ForceDirectories(ExtractFileDir(ConfigFilePath + CONFIG_FILE)) then
     begin
       try
-        ConfigIniFile := TIniFile.Create(CONFIG_FILE, [ifoStripQuotes]);
+        ConfigIniFile := TIniFile.Create(ConfigFilePath + CONFIG_FILE, [ifoStripQuotes]);
         MousePath := ConfigIniFile.ReadString('Easy Switcher', 'mouse',
           '/dev/input/mice');
         ReverseMode := StrToBool(ConfigIniFile.ReadString('Easy Switcher',
@@ -500,17 +502,17 @@ var
               Config.Add('# delay=10');
               Config.Add('');
               Config.Add('delay=' + IntToStr(Delay));
-              Config.SaveToFile(CONFIG_FILE);
+              Config.SaveToFile(ConfigFilePath + CONFIG_FILE);
               Log(etInfo, 'Keyboard configuration successfully saved.', False);
               Log(etInfo, Format('See %s to edit additional parameters.',
-                [CONFIG_FILE]), False);
+                [ConfigFilePath + CONFIG_FILE]), False);
               if Assigned(Config) then
                 FreeAndNil(Config);
             except
               on E: Exception do
               begin
                 Log(etError, Format('Error writing configuration file %s %s',
-                  [CONFIG_FILE, StrError(errno)]), False);
+                  [ConfigFilePath + CONFIG_FILE, StrError(errno)]), False);
                 if Assigned(Config) then
                   FreeAndNil(Config);
               end;
@@ -537,7 +539,7 @@ var
     else
     begin
       Log(etError, Format('Cannot create directory %s',
-        [ExtractFilePath(CONFIG_FILE)]), False);
+        [ConfigFilePath]), False);
       Halt(1);
     end;
   end;
@@ -598,6 +600,7 @@ var
     vKeyboardSetup: uinput_setup;
     KeyIE: input_event;
     KeyAction: array [0..2] of string = ('up', 'down', 'autorepeat');
+    ConfigFilePath: string;
 
     function GetBufferAction(): TBufferAction;
     var
@@ -935,10 +938,11 @@ var
 
     //read config
     Log(etInfo, 'Reading config...', True);
-    if FileExists(CONFIG_FILE) then
+    ConfigFilePath := GetAppConfigDir(False);
+    if FileExists(ConfigFilePath + CONFIG_FILE) then
     begin
       try
-        ConfigIniFile := TIniFile.Create(CONFIG_FILE, [ifoStripQuotes]);
+        ConfigIniFile := TIniFile.Create(ConfigFilePath + CONFIG_FILE, [ifoStripQuotes]);
         KeyboardPath := ConfigIniFile.ReadString('Easy Switcher', 'keyboard', '~');
         MousePath := ConfigIniFile.ReadString('Easy Switcher', 'mouse', '~');
         StrKeys_LS := ConfigIniFile.ReadString('Easy Switcher',
@@ -971,7 +975,7 @@ var
     begin
       Log(etError, Format(
         'Missing config file %s, run ''easy-switcher -c'' to configure.',
-        [CONFIG_FILE]), False);
+        [ConfigFilePath + CONFIG_FILE]), False);
       Halt(1);
     end;
     Log(etInfo, 'Done.', True);
