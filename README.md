@@ -36,14 +36,12 @@ To build with Lazarus:
 * Configure: `sudo easy-switcher -c` 
 * Install & start Easy Switcher as daemon:  
   If your OS supports systemd:
-  ```
-  sudo easy-switcher -i
-  systemctl start --user easy-switcher
-  systemctl enable --user easy-swither
-
-  #or just
-  systemctl enable --user --now easy-swither
-  ```  
+  `sudo easy-switcher -i`
+  then
+  `sudo systemctl enable --now easy-switcher`
+  or
+  `systemctl enable --user --now easy-switcher`
+    
   If your OS doesn't support systemd, please refer your OS documentation on how to install and run daemons. You may need to use -o or --old-style switch to run Easy Switcher as an "old-style" (true) daemon.
   
 ## Configuring
