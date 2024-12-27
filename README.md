@@ -45,7 +45,7 @@ To build with Lazarus:
   
 ## Configuring
 Easy Switcher has a built-in configuration tool. For automatic configuration, run it in the terminal with the -c or --configure switch.    
-Additional tuning is available with manual configuration, please edit /etc/easy-switcher/default.conf.  
+Additional tuning is available with manual configuration, please edit $HOME/.config/easy-switcher/default.conf.
 
 ## Troubleshooting
 Run-time errors are written to syslog.  
